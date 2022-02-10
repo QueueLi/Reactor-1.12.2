@@ -201,10 +201,8 @@ local function ReactorControl()
       gpu.setForeground(0xFF9900)
       gpu.set(1,15,"    замена конденсаторов    ")
 	  
-      if reactor.producesEnergy() then
-		com.reactor_chamber.stopReactor()
-        os.sleep(0.1)
-      end
+	com.reactor_chamber.stopReactor()
+        os.sleep(0.5)
 	  
       tr.transferItem(sideReac, sideInv, 1, slotReac[i])
       gpu.setForeground(0xFF0000)
