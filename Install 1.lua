@@ -25,7 +25,7 @@ local libs = {
         path = "/lib/doubleBuffering.lua"
     }
 }
-
+--wget -f https://raw.githubusercontent.com/QueueLi/Reactor-1.12.2/main/r.txt /home/Reactor.lua
 shell.execute("md /home/images/reactor/")
 shell.execute("md md /lib/FormatModules")
 shell.execute("wget -f https://raw.githubusercontent.com/QueueLi/Reactor-1.12.2/main/r.txt" .. " /home/Reactor.lua")
