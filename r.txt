@@ -1,7 +1,8 @@
 --Reactor
 local offReac = 8400 --температура перегрева реактора до отключения
 local perDamage = 61 --процент износа конденсатора при котором он меняется
- 
+ local errsch = 0
+ local errK = 0
 local com = require("component")
 local computer = require("computer")
 local event = require("event")
@@ -129,7 +130,7 @@ os.sleep(1)
 local function gui() 
   gpu.setResolution(28,15)
   gpu.setBackground(0x000000)
-  gpu.fill(1,1,28,15," ")
+  gpu.fill(1,1,28,16," ")
   gpu.setForeground(0x669999)
   gpu.set(1,1,"┌──────────────────────────┐")
   gpu.set(1,2,"│  │  │  │  │  │  │  │  │  │")
@@ -197,11 +198,9 @@ local function ReactorControl()
 	  com.reactor_chamber.stopReactor()
 	  os.sleep(0.5)
       alert(" снизте % замены конденсат. ")
-      while run do
+
         computer.beep(500, 1)
-        stop(3)
-      end
-      alert(" Выкл системы ")
+ errK = errK + 1
     end
     if not per or per >= perDamage then
       gpu.setForeground(0xFF9900)
@@ -314,7 +313,47 @@ gpu.setForeground(0xFF9900)
 gpu.set(1,14,"  для завершения нажмите E  ")
 os.sleep(1)
 while run do
-ReactorControl()
+gpu.set(1,16," Обыч ошиб: " .. errsch.. "Крит ошиб: " .. errK)
+for i = 1,#slotReac do
+    if data[slotReac[i]].name == "minecraft:air" then
+      per = nil
+    elseif data[slotReac[i]].damage then
+      per = math.ceil(100*data[slotReac[i]].damage/data[slotReac[i]].maxDamage)
+      gpu.setForeground(0xFF9900)
+      gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
+    end
+    if per >= 76 then
+	  com.reactor_chamber.stopReactor()
+	  os.sleep(0.1)
+      alert(" Сработал первый уровень проверки ")
+	  errsch = errsch + 1       
+    end
+    if not per or per >= perDamage then
+      gpu.setForeground(0xFF9900)
+      gpu.set(1,15,"    замена конденсаторов    ")	  
+		com.reactor_chamber.stopReactor()
+        os.sleep(0.1)
+	  
+      tr.transferItem(sideReac, sideInv, 1, slotReac[i])
+      gpu.setForeground(0xFF0000)
+      gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
+      local data1 = tr.getAllStacks(sideInv).getAll()
+      for i1 = 0,slotsInv do
+        if data1[i1] and data1[i1].name then
+          local per = math.ceil(100*data1[i1].damage/data1[i1].maxDamage)
+          if string.find(data1[i1].name,"ondensator") and per < 90 then
+            toReac = tr.transferItem(sideInv, sideReac, 1, i1, slotReac[i])
+            gpu.setForeground(0x00FF00)
+            gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
+            break
+          else
+            toReac = 0
+          end
+        end
+      end
+    end
+  end
+  
   local ok,err = pcall(ReactorControl)
   if not ok then
 	com.reactor_chamber.stopReactor()
