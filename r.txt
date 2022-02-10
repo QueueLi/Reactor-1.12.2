@@ -1,6 +1,6 @@
 --Reactor
 local offReac = 94000 --температура перегрева реактора до отключения
-local perDamage = 66 --процент износа конденсатора при котором он меняется
+local perDamage = 75 --процент износа конденсатора при котором он меняется
  
 local com = require("component")
 local computer = require("computer")
@@ -189,7 +189,6 @@ local function ReactorControl()
       gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
     end
     if per >= 87 then
-      --red.setOutput(sideRed, 0)
 	  com.reactor_chamber.stopReactor()
       alert(" снизте % замены конденсат. ")
       while run do
@@ -203,7 +202,6 @@ local function ReactorControl()
       gpu.set(1,15,"    замена конденсаторов    ")
 	  
       if reactor.producesEnergy() then
-        --red.setOutput(sideRed, 0)
 		com.reactor_chamber.stopReactor()
         os.sleep(0.5)
       end
@@ -237,7 +235,6 @@ local function ReactorControl()
     return true
   end
   if reactor.getHeat() > offReac then
-    --red.setOutput(sideRed, 0)
 	com.reactor_chamber.stopReactor()
     alert("     перегрев реактора !    ")
   elseif not circuitCheck() then
@@ -247,7 +244,6 @@ local function ReactorControl()
   elseif noFuel >= 5 then
     alert("       нет топлива !        ")
   else
-   -- red.setOutput(sideRed, 15)
 	com.reactor_chamber.startReactor()
     if not reactor.producesEnergy() then
       alert("  реактор не запускается !  ")
