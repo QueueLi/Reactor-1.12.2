@@ -1,6 +1,6 @@
 --Reactor
 local offReac = 99900 --температура перегрева реактора до отключения
-local perDamage = 60 --процент износа конденсатора при котором он меняется
+local perDamage = 57 --процент износа конденсатора при котором он меняется
  
 local com = require("component")
 local computer = require("computer")
