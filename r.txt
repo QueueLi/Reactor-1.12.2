@@ -1,5 +1,5 @@
 --Reactor
-local offReac = 8400 --температура перегрева реактора до отключения
+local offReac = 94000 --температура перегрева реактора до отключения
 local perDamage = 76 --процент износа конденсатора при котором он меняется
  
 local com = require("component")
@@ -190,7 +190,7 @@ local function ReactorControl()
     end
     if per >= 81 then
       --red.setOutput(sideRed, 0)
-	  com.reactor_chamber.stoptReactor()
+	  com.reactor_chamber.stopReactor()
       alert(" снизте % замены конденсат. ")
       while run do
         computer.beep(500, 1)
