@@ -1,0 +1,338 @@
+--Reactor
+local offReac = 8400 --температура перегрева реактора до отключения
+local perDamage = 76 --процент износа конденсатора при котором он меняется
+ 
+local com = require("component")
+local computer = require("computer")
+local event = require("event")
+local gpu = com.gpu
+local w,h = gpu.getResolution()
+local per,noFuel,lowEu,toReac,run = 0,0,0,1,true
+local sideReac,sideInv,sideRed,OutputEUt,StartEUt
+local slotReac,Reflector = {},{}
+local tr = com.transposer
+local reactor = com.reactor_chamber 
+
+	if tonumber(string.format('%d%d%d',_OSVERSION:match("(%d).(%d).(%d)"))) < 172 then
+	  print("обнаружен ".._OSVERSION.."\n".."требуется версия 1.7 +")
+	  os.exit()
+	end
+ 
+	if not com.isAvailable("transposer") then
+	  print("нет транспозера")
+	  os.exit()
+	end
+
+	if not com.isAvailable("redstone") then
+	  print("нет контроллера красного камня, а он и не нужен, Спасибо supernovus!")
+	end
+
+		if not com.isAvailable("reactor_chamber") then
+		  print("камера реактора не найдена")
+		  os.exit()
+		  end
+		  
+     print("\n".."Проверка реактора на производство Eu !")
+	 
+	 if reactor.producesEnergy() then
+	  print("\n".."Останавливаю реактор!")
+	  com.reactor_chamber.stopReactor()	
+	end
+  print("\n".."Все четко. Продолжаем !")
+if reactor.getHeat() > offReac then
+  print("\n".."перегрев реактора! Рисковать будем? Y/N") -- Надо нарисовать будет
+  os.exit()
+end
+ 
+print("поиск реактора и сундука")
+for i = 0,5 do
+  local vr = tr.getInventoryName(i)
+  if vr then
+    if string.find(vr,"ic2:te") then
+      print("реактор в стороне: "..i)
+      sideReac = i
+    end
+    if string.find(vr,"hest") then
+      print("сундук в стороне:  "..i)
+      sideInv = i
+    end
+  end
+end
+if not sideReac then
+  print("\n".."камера реактора не найдена")
+  os.exit()
+end
+if not sideInv then
+  print("\n".."сундук не найден")
+  os.exit()
+end
+local slotsReac = tr.getInventorySize(sideReac)
+local slotsInv = tr.getInventorySize(sideInv)
+ 
+print("сохранение конденсаторов")
+local data = tr.getAllStacks(sideReac).getAll()
+for i = 0,slotsReac do
+  if data[i] and data[i].name then
+    if string.find(data[i].name,"ondensator") then
+      local per = math.ceil(100*data[i].damage/data[i].maxDamage)
+      print("слот: "..(i).."  износ: "..per.." %")
+      if per >= perDamage then
+        print("\n".."замените конденсатор в слоте: "..(i))
+        os.exit()
+      end
+      table.insert(slotReac, i)
+    end
+  end
+end
+print("сохранение отражателей")
+for i = 0,slotsReac do
+  if data[i] and data[i].name then
+    if string.find(data[i].name,"eflector") then
+      print("слот: "..(i))
+      table.insert(Reflector, i)
+    end
+  end
+end
+ 
+print("пробный запуск")
+for k,n in pairs({3,2,4,5,0,1}) do
+  --red.setOutput(n, 15) Включить реатор через редсттоун
+  com.reactor_chamber.startReactor()
+  if reactor.producesEnergy() then
+    os.sleep(1)
+    StartEUt = math.ceil(reactor.getReactorEUOutput())
+    print("StartEUt = "..StartEUt)
+    sideRed = n
+    --red.setOutput(n, 0) Выключить реатор через редстоун
+    --print("редстоун в стороне: "..sideRed) 
+	com.reactor_chamber.stopReactor()
+    break
+  else
+    --red.setOutput(n, 0) Выключить реатор через редстоун
+	com.reactor_chamber.stopReactor()
+  end
+  if k == 6 then
+    print("\n".."реактор не запускается")
+    os.exit()
+  end
+end
+ 
+print("настройка завершена".."\n".."старт...")
+os.sleep(2)
+ 
+local function gui() 
+  gpu.setResolution(28,15)
+  gpu.setBackground(0x000000)
+  gpu.fill(1,1,28,15," ")
+  gpu.setForeground(0x669999)
+  gpu.set(1,1,"┌──────────────────────────┐")
+  gpu.set(1,2,"│  │  │  │  │  │  │  │  │  │")
+  gpu.set(1,3,"│──────────────────────────│")
+  gpu.set(1,4,"│  │  │  │  │  │  │  │  │  │")
+  gpu.set(1,5,"│──────────────────────────│")
+  gpu.set(1,6,"│  │  │  │  │  │  │  │  │  │")
+  gpu.set(1,7,"│──────────────────────────│")
+  gpu.set(1,8,"│  │  │  │  │  │  │  │  │  │")
+  gpu.set(1,9,"│──────────────────────────│")
+ gpu.set(1,10,"│  │  │  │  │  │  │  │  │  │")
+ gpu.set(1,11,"│──────────────────────────│")
+ gpu.set(1,12,"│  │  │  │  │  │  │  │  │  │")
+ gpu.set(1,13,"└──────────────────────────┘")
+end
+ 
+local xy = {
+{"2","2"},{"5","2"},{"8","2"},{"11","2"},{"14","2"},{"17","2"},{"20","2"},{"23","2"},{"26","2"},
+{"2","4"},{"5","4"},{"8","4"},{"11","4"},{"14","4"},{"17","4"},{"20","4"},{"23","4"},{"26","4"},
+{"2","6"},{"5","6"},{"8","6"},{"11","6"},{"14","6"},{"17","6"},{"20","6"},{"23","6"},{"26","6"},
+{"2","8"},{"5","8"},{"8","8"},{"11","8"},{"14","8"},{"17","8"},{"20","8"},{"23","8"},{"26","8"},
+{"2","10"},{"5","10"},{"8","10"},{"11","10"},{"14","10"},{"17","10"},{"20","10"},{"23","10"},{"26","10"},
+{"2","12"},{"5","12"},{"8","12"},{"11","12"},{"14","12"},{"17","12"},{"20","12"},{"23","12"},{"26","12"},
+}
+ 
+local function stop(wait) 
+  local e = ({event.pull(wait,"key_down")})[4]
+  if e == 18 or e == 20 then
+    --red.setOutput(sideRed, 0) Выключить реатор через редстоун
+	com.reactor_chamber.stopReactor()
+    gpu.setResolution(w, h)
+    gpu.setBackground(0x000000)
+    gpu.setForeground(0xFFFFFF)
+    gpu.fill(1, 1, w, h, " ")
+    print("программа завершена")
+    os.sleep(1)
+    if reactor.producesEnergy() then
+      print("ВНИМАНИЕ реактор по прежнему активен !!!")
+    else
+      print("реактор остановлен")
+    end
+    run = false
+  end
+end
+ 
+local function alert(message) 
+  gpu.setForeground(0xFF9900)
+  gpu.set(1,14,"  для завершения нажмите E  ")
+  gpu.setForeground(0xFF0000)
+  gpu.set(1,15,message)
+  computer.beep(500, 1)
+  stop(3)
+end
+ 
+local function ReactorControl()
+  local data = tr.getAllStacks(sideReac).getAll()
+  for i = 1,#slotReac do
+    if data[slotReac[i]].name == "minecraft:air" then
+      per = nil
+    elseif data[slotReac[i]].damage then
+      per = math.ceil(100*data[slotReac[i]].damage/data[slotReac[i]].maxDamage)
+      gpu.setForeground(0xFF9900)
+      gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
+    end
+    if per >= 81 then
+      --red.setOutput(sideRed, 0)
+	  com.reactor_chamber.stoptReactor()
+      alert(" снизте % замены конденсат. ")
+      while run do
+        computer.beep(500, 1)
+        stop(3)
+      end
+      alert(" Выкл системы ")
+    end
+    if not per or per >= perDamage then
+      gpu.setForeground(0xFF9900)
+      gpu.set(1,15,"    замена конденсаторов    ")
+	  
+      if reactor.producesEnergy() then
+        --red.setOutput(sideRed, 0)
+		com.reactor_chamber.stopReactor()
+        os.sleep(0.5)
+      end
+	  
+      tr.transferItem(sideReac, sideInv, 1, slotReac[i])
+      gpu.setForeground(0xFF0000)
+      gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
+      local data1 = tr.getAllStacks(sideInv).getAll()
+      for i1 = 0,slotsInv do
+        if data1[i1] and data1[i1].name then
+          local per = math.ceil(100*data1[i1].damage/data1[i1].maxDamage)
+          if string.find(data1[i1].name,"ondensator") and per < 90 then
+            toReac = tr.transferItem(sideInv, sideReac, 1, i1, slotReac[i])
+            gpu.setForeground(0x00FF00)
+            gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
+            break
+          else
+            toReac = 0
+          end
+        end
+      end
+    end
+  end
+  local function circuitCheck() 
+    local data = tr.getAllStacks(sideReac).getAll()
+    for i = 1,#slotReac do
+      if data[slotReac[i]].name == "minecraft:air" then
+        return false
+      end
+    end
+    return true
+  end
+  if reactor.getHeat() > offReac then
+    --red.setOutput(sideRed, 0)
+	com.reactor_chamber.stopReactor()
+    alert("     перегрев реактора !    ")
+  elseif not circuitCheck() then
+    alert(" нет целых конденсаторов !  ")
+  elseif toReac == 0 then
+    alert("    в сундуке нет места !   ")
+  elseif noFuel >= 5 then
+    alert("       нет топлива !        ")
+  else
+   -- red.setOutput(sideRed, 15)
+	com.reactor_chamber.startReactor()
+    if not reactor.producesEnergy() then
+      alert("  реактор не запускается !  ")
+    else
+      OutputEUt = math.ceil(reactor.getReactorEUOutput())
+      gpu.setForeground(0x00FF00)
+      gpu.set(1,14,"      eu/t =  "..OutputEUt.."            ")
+      gpu.set(1,15,"      реактор активен       ")
+    end
+  end
+  stop(0.7)
+  if reactor.producesEnergy() and reactor.getReactorEUOutput() == 0 then
+    noFuel = noFuel + 1
+  else
+    noFuel = 0
+    if OutputEUt and OutputEUt < StartEUt then
+      lowEu = lowEu + 1
+    else
+      lowEu = 0
+    end
+  end
+  if noFuel == 3 or lowEu == 3 then
+    local data2 = tr.getAllStacks(sideReac).getAll()
+    local data3 = tr.getAllStacks(sideInv).getAll()
+    for i2 = 0,slotsReac do
+      if data2[i2] and data2[i2].name then
+        if string.find(data2[i2].name,"depleted") then
+          gpu.setForeground(0xFF9900)
+          gpu.set(1,15,"      замена стержней       ")
+          tr.transferItem(sideReac, sideInv, 1, i2)
+          for i3 = 0,slotsInv do
+            if data3[i3] and data3[i3].name then
+              if string.find(data3[i3].name,"hexadeca") then
+                tr.transferItem(sideInv, sideReac, 1, i3, i2)
+                break
+              end
+            end
+          end
+        end
+      end
+    end
+    StartEUt = math.ceil(reactor.getReactorEUOutput())
+    lowEu = 0
+    if Reflector and #Reflector > 1 then
+      --red.setOutput(sideRed, 0)
+	  com.reactor_chamber.stopReactor()
+    end
+    for i4 = 1,#Reflector do
+      if data2[Reflector[i4]].name == "minecraft:air" then
+        for i5 = 0,slotsInv do
+          if data3[i5] and data3[i5].name then
+            if string.find(data3[i5].name,"eflector") then
+              gpu.setForeground(0xFF9900)
+              gpu.set(1,15,"      замена отражателя     ")
+              tr.transferItem(sideInv, sideReac, 1, i5, Reflector[i4])
+            end
+          end
+        end
+      end
+    end
+  end
+  if OutputEUt and OutputEUt > StartEUt then
+    StartEUt = math.ceil(reactor.getReactorEUOutput())
+  end
+end
+ 
+gui()
+gpu.setForeground(0xFF9900)
+gpu.set(1,14,"  для завершения нажмите E  ")
+os.sleep(1)
+while run do
+  local ok,err = pcall(ReactorControl)
+  if not ok then
+    --red.setOutput(sideRed, 0)
+	com.reactor_chamber.stopReactor()
+    gpu.setResolution(w, h)
+    gpu.setBackground(0x000000)
+    gpu.setForeground(0xFFFFFF)
+    os.execute("cls")
+    print("программа аварийно завершена")
+    if type(err) == "table" then
+      io.stderr:write(table.unpack(err))
+    else
+      io.stderr:write(err)
+    end
+    run = false
+  end
+end
