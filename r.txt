@@ -1,6 +1,6 @@
 --Reactor
-local offReac = 99000 --температура перегрева реактора до отключения
-local perDamage = 75 --процент износа конденсатора при котором он меняется
+local offReac = 8400 --температура перегрева реактора до отключения
+local perDamage = 61 --процент износа конденсатора при котором он меняется
  
 local com = require("component")
 local computer = require("computer")
@@ -98,6 +98,7 @@ print("пробный запуск")
 for k,n in pairs({3,2,4,5,0,1}) do
   --red.setOutput(n, 15) Включить реатор через редсттоун
   com.reactor_chamber.startReactor()
+  os.sleep(1)
   if reactor.producesEnergy() then
     os.sleep(1)
     StartEUt = math.ceil(reactor.getReactorEUOutput())
@@ -116,9 +117,9 @@ for k,n in pairs({3,2,4,5,0,1}) do
     os.exit()
   end
 end
- 
+os.sleep(1)
 print("настройка завершена".."\n".."старт...")
-os.sleep(2)
+os.sleep(1)
  
 local function gui() 
   gpu.setResolution(28,15)
@@ -152,7 +153,6 @@ local xy = {
 local function stop(wait) 
   local e = ({event.pull(wait,"key_down")})[4]
   if e == 18 or e == 20 then
-    --red.setOutput(sideRed, 0) Выключить реатор через редстоун
 	com.reactor_chamber.stopReactor()
     gpu.setResolution(w, h)
     gpu.setBackground(0x000000)
@@ -188,8 +188,8 @@ local function ReactorControl()
       gpu.setForeground(0xFF9900)
       gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
     end
-    if per >= 87 then
-	  com.reactor_chamber.stopReactor()
+    if per >= 76 then
+	  com.reactor_chamber.stoptReactor()
       alert(" снизте % замены конденсат. ")
       while run do
         computer.beep(500, 1)
@@ -201,8 +201,10 @@ local function ReactorControl()
       gpu.setForeground(0xFF9900)
       gpu.set(1,15,"    замена конденсаторов    ")
 	  
-	com.reactor_chamber.stopReactor()
+      if reactor.producesEnergy() then
+		com.reactor_chamber.stopReactor()
         os.sleep(0.5)
+      end
 	  
       tr.transferItem(sideReac, sideInv, 1, slotReac[i])
       gpu.setForeground(0xFF0000)
@@ -242,7 +244,9 @@ local function ReactorControl()
   elseif noFuel >= 5 then
     alert("       нет топлива !        ")
   else
+    
 	com.reactor_chamber.startReactor()
+	os.sleep(1)
     if not reactor.producesEnergy() then
       alert("  реактор не запускается !  ")
     else
@@ -286,7 +290,6 @@ local function ReactorControl()
     StartEUt = math.ceil(reactor.getReactorEUOutput())
     lowEu = 0
     if Reflector and #Reflector > 1 then
-      --red.setOutput(sideRed, 0)
 	  com.reactor_chamber.stopReactor()
     end
     for i4 = 1,#Reflector do
@@ -315,7 +318,6 @@ os.sleep(1)
 while run do
   local ok,err = pcall(ReactorControl)
   if not ok then
-    --red.setOutput(sideRed, 0)
 	com.reactor_chamber.stopReactor()
     gpu.setResolution(w, h)
     gpu.setBackground(0x000000)
