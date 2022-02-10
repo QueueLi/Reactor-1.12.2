@@ -1,5 +1,5 @@
 --Reactor
-local offReac = 94000 --температура перегрева реактора до отключения
+local offReac = 99000 --температура перегрева реактора до отключения
 local perDamage = 75 --процент износа конденсатора при котором он меняется
  
 local com = require("component")
@@ -203,7 +203,7 @@ local function ReactorControl()
 	  
       if reactor.producesEnergy() then
 		com.reactor_chamber.stopReactor()
-        os.sleep(0.5)
+        os.sleep(0.1)
       end
 	  
       tr.transferItem(sideReac, sideInv, 1, slotReac[i])
