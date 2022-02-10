@@ -1,6 +1,6 @@
 --Reactor
-local offReac = 8400 --температура перегрева реактора до отключения
-local perDamage = 61 --процент износа конденсатора при котором он меняется
+local offReac = 99900 --температура перегрева реактора до отключения
+local perDamage = 60 --процент износа конденсатора при котором он меняется
  
 local com = require("component")
 local computer = require("computer")
@@ -189,7 +189,7 @@ local function ReactorControl()
       gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
     end
     if per >= 76 then
-	  com.reactor_chamber.stoptReactor()
+	  com.reactor_chamber.stopReactor()
       alert(" снизте % замены конденсат. ")
       while run do
         computer.beep(500, 1)
