@@ -1,6 +1,6 @@
 --Reactor
 local offReac = 99900 --температура перегрева реактора до отключения
-local perDamage = 55 --процент износа конденсатора при котором он меняется
+local perDamage = 100-19-19 --процент износа конденсатора при котором он меняется
  
 local com = require("component")
 local computer = require("computer")
@@ -188,8 +188,9 @@ local function ReactorControl()
       gpu.setForeground(0xFF9900)
       gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
     end
-    if per >= 71 then
+    if per >= 100-19 then
 	  com.reactor_chamber.stopReactor()
+	  os.sleep(0.1)
       alert(" снизте % замены конденсат. ")
       while run do
         computer.beep(500, 1)
@@ -202,7 +203,7 @@ local function ReactorControl()
       gpu.set(1,15,"    замена конденсаторов    ")
 	  
 		com.reactor_chamber.stopReactor()
-        os.sleep(0.5)
+        os.sleep(0.7)
 
 	  
       tr.transferItem(sideReac, sideInv, 1, slotReac[i])
@@ -214,6 +215,7 @@ local function ReactorControl()
           local per = math.ceil(100*data1[i1].damage/data1[i1].maxDamage)
           if string.find(data1[i1].name,"ondensator") and per < 90 then
             toReac = tr.transferItem(sideInv, sideReac, 1, i1, slotReac[i])
+	    os.sleep(0.1)
             gpu.setForeground(0x00FF00)
             gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
             break
@@ -227,6 +229,7 @@ local function ReactorControl()
   local function circuitCheck() 
     local data = tr.getAllStacks(sideReac).getAll()
     for i = 1,#slotReac do
+    os.sleep(0.1)
       if data[slotReac[i]].name == "minecraft:air" then
         return false
       end
@@ -235,6 +238,7 @@ local function ReactorControl()
   end
   if reactor.getHeat() > offReac then
 	com.reactor_chamber.stopReactor()
+	os.sleep(0.7)
     alert("     перегрев реактора !    ")
   elseif not circuitCheck() then
     alert(" нет целых конденсаторов !  ")
