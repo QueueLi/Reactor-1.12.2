@@ -108,6 +108,7 @@ local function craft_conden()
         local item = i_c.getStackInInternalSlot(4)
         if item then
           per = math.ceil(100*item.damage/item.maxDamage)
+		  print("Крафчу до ")
           if per > 99.999 then
             r.transferTo(2)
           else
@@ -141,7 +142,7 @@ while true do
       if item and string.find(item.name,"ondensator") then
         per = math.ceil(100*item.damage/item.maxDamage)
         if per > 0.001 then
-          print("конденсатор в слоте: "..slot.."  износ: > 1%")
+          print("конденсатор в слоте: "..slot.."  износ: ".. per .. "%")
           slotConden[slot] = slot
         end
       end
@@ -150,5 +151,5 @@ while true do
     slotConden = {}
   end
   print("всего скрафтил конденсаторов: "..dropCount.."\n".."жду 1 секунду...")
-  os.sleep(0.1)
+  os.sleep(1)
 end
