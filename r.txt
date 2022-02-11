@@ -13,6 +13,62 @@ local sideReac,sideInv,sideRed,OutputEUt,StartEUt
 local slotReac,Reflector = {},{}
 local tr = com.transposer
 local reactor = com.reactor_chamber 
+
+
+	  
+	if tonumber(string.format('%d%d%d',_OSVERSION:match("(%d).(%d).(%d)"))) < 172 then
+	  print("обнаружен ".._OSVERSION.."\n".."требуется версия 1.7 +")
+	  os.exit()
+	end
+ 
+	if not com.isAvailable("transposer") then
+	  print("нет транспозера")
+	  os.exit()
+	end
+
+
+		if not com.isAvailable("reactor_chamber") then
+		  print("камера реактора не найдена")
+		  os.exit()
+		  end
+		  
+     print("\n".."Проверка реактора на производство Eu !")
+	 
+	 if reactor.producesEnergy() then
+	  print("\n".."Останавливаю реактор!")
+	  com.reactor_chamber.stopReactor()	
+	end
+  print("\n".."Все четко. Продолжаем !")
+if reactor.getHeat() > offReac then
+  print("\n".."перегрев реактора! Рисковать будем? Y/N") -- Надо нарисовать будет
+  os.exit()
+end
+ 
+print("поиск реактора и сундука")
+for i = 0,5 do
+  local vr = tr.getInventoryName(i)
+  if vr then
+    if string.find(vr,"ic2:te") then
+      print("реактор в стороне: "..i)
+      sideReac = i
+    end
+    if string.find(vr,"hest") then
+      print("сундук в стороне:  "..i)
+      sideInv = i
+    end
+  end
+end
+if not sideReac then
+  print("\n".."камера реактора не найдена")
+  os.exit()
+end
+if not sideInv then
+  print("\n".."сундук не найден")
+  os.exit()
+end
+local slotsReac = tr.getInventorySize(sideReac)
+local slotsInv = tr.getInventorySize(sideInv)
+
 local function gui() 
   gpu.setResolution(28,15)
   gpu.setBackground(0x000000)
@@ -179,59 +235,7 @@ gpu.setForeground(0xFF9900)
 gpu.set(1,14,"  для завершения нажмите E  ")	  
 
 	  
-	  
-	if tonumber(string.format('%d%d%d',_OSVERSION:match("(%d).(%d).(%d)"))) < 172 then
-	  print("обнаружен ".._OSVERSION.."\n".."требуется версия 1.7 +")
-	  os.exit()
-	end
- 
-	if not com.isAvailable("transposer") then
-	  print("нет транспозера")
-	  os.exit()
-	end
 
-
-		if not com.isAvailable("reactor_chamber") then
-		  print("камера реактора не найдена")
-		  os.exit()
-		  end
-		  
-     print("\n".."Проверка реактора на производство Eu !")
-	 
-	 if reactor.producesEnergy() then
-	  print("\n".."Останавливаю реактор!")
-	  com.reactor_chamber.stopReactor()	
-	end
-  print("\n".."Все четко. Продолжаем !")
-if reactor.getHeat() > offReac then
-  print("\n".."перегрев реактора! Рисковать будем? Y/N") -- Надо нарисовать будет
-  os.exit()
-end
- 
-print("поиск реактора и сундука")
-for i = 0,5 do
-  local vr = tr.getInventoryName(i)
-  if vr then
-    if string.find(vr,"ic2:te") then
-      print("реактор в стороне: "..i)
-      sideReac = i
-    end
-    if string.find(vr,"hest") then
-      print("сундук в стороне:  "..i)
-      sideInv = i
-    end
-  end
-end
-if not sideReac then
-  print("\n".."камера реактора не найдена")
-  os.exit()
-end
-if not sideInv then
-  print("\n".."сундук не найден")
-  os.exit()
-end
-local slotsReac = tr.getInventorySize(sideReac)
-local slotsInv = tr.getInventorySize(sideInv)
  
 print("сохранение конденсаторов")
 local data = tr.getAllStacks(sideReac).getAll()
