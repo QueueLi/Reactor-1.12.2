@@ -217,10 +217,9 @@ local function ReactorControl()
 	 if per >= 100-15 then
 	  com.reactor_chamber.stopReactor()
 	  alert(" снизте % замены конденсат. ")
-	  os.sleep(10.5)     
+	  os.sleep(1.5)     
         computer.beep(500, 1)
       errK = errK + 1
-	  stop(3)
     end
   end
   local function circuitCheck() 
