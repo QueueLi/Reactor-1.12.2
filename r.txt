@@ -13,7 +13,57 @@ local sideReac,sideInv,sideRed,OutputEUt,StartEUt
 local slotReac,Reflector = {},{}
 local tr = com.transposer
 local reactor = com.reactor_chamber 
+
+local function ReactorControl()
+  local data = tr.getAllStacks(sideReac).getAll()
+  for i = 1,#slotReac do
+    if data[slotReac[i]].name == "minecraft:air" then
+      per = nil
+    elseif data[slotReac[i]].damage then
+      per = math.ceil(100*data[slotReac[i]].damage/data[slotReac[i]].maxDamage)
+      gpu.setForeground(0xFF9900)
+      gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
+    end
+   
+    if not per or per >= perDamage then
+      gpu.setForeground(0xFF9900)
+      gpu.set(1,15,"    замена конденсаторов    ")
 	  
+      if reactor.producesEnergy() then
+		com.reactor_chamber.stopReactor()
+        os.sleep(0.5)
+      end
+	  
+      tr.transferItem(sideReac, sideInv, 1, slotReac[i])
+	  os.sleep(0.3)
+      gpu.setForeground(0xFF0000)
+      gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
+      local data1 = tr.getAllStacks(sideInv).getAll()
+      for i1 = 0,slotsInv do
+        if data1[i1] and data1[i1].name then
+          local per = math.ceil(100*data1[i1].damage/data1[i1].maxDamage)
+          if string.find(data1[i1].name,"ondensator") and per < 90 then
+            toReac = tr.transferItem(sideInv, sideReac, 1, i1, slotReac[i])
+            gpu.setForeground(0x00FF00)
+            gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
+            break
+          else
+            toReac = 0
+          end
+        end
+      end
+    end
+	 
+  end
+  local function circuitCheck() 
+    local data = tr.getAllStacks(sideReac).getAll()
+    for i = 1,#slotReac do
+      if data[slotReac[i]].name == "minecraft:air" then
+        return false
+      end
+    end
+    return true
+  end	  
 
 	  
 	  
@@ -78,8 +128,14 @@ for i = 0,slotsReac do
       local per = math.ceil(100*data[i].damage/data[i].maxDamage)
       print("слот: "..(i).."  износ: "..per.." %")
       if per >= perDamage then
-        print("\n".."замените конденсатор в слоте: "..(i))
-        os.exit()
+        print("\n".."Обновляю конденсоторы: "..(i))
+		computer.beep(500, 1)
+		os.sleep(0.3)
+		computer.beep(500, 1)
+		os.sleep(0.3)
+		computer.beep(500, 1)
+		os.sleep(0.3)
+        ReactorControl()
       end
       table.insert(slotReac, i)
     end
@@ -175,56 +231,7 @@ local function alert(message)
   computer.beep(500, 1)
 end
  
-local function ReactorControl()
-  local data = tr.getAllStacks(sideReac).getAll()
-  for i = 1,#slotReac do
-    if data[slotReac[i]].name == "minecraft:air" then
-      per = nil
-    elseif data[slotReac[i]].damage then
-      per = math.ceil(100*data[slotReac[i]].damage/data[slotReac[i]].maxDamage)
-      gpu.setForeground(0xFF9900)
-      gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
-    end
-   
-    if not per or per >= perDamage then
-      gpu.setForeground(0xFF9900)
-      gpu.set(1,15,"    замена конденсаторов    ")
-	  
-      if reactor.producesEnergy() then
-		com.reactor_chamber.stopReactor()
-        os.sleep(0.5)
-      end
-	  
-      tr.transferItem(sideReac, sideInv, 1, slotReac[i])
-	  os.sleep(0.3)
-      gpu.setForeground(0xFF0000)
-      gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
-      local data1 = tr.getAllStacks(sideInv).getAll()
-      for i1 = 0,slotsInv do
-        if data1[i1] and data1[i1].name then
-          local per = math.ceil(100*data1[i1].damage/data1[i1].maxDamage)
-          if string.find(data1[i1].name,"ondensator") and per < 90 then
-            toReac = tr.transferItem(sideInv, sideReac, 1, i1, slotReac[i])
-            gpu.setForeground(0x00FF00)
-            gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
-            break
-          else
-            toReac = 0
-          end
-        end
-      end
-    end
-	 
-  end
-  local function circuitCheck() 
-    local data = tr.getAllStacks(sideReac).getAll()
-    for i = 1,#slotReac do
-      if data[slotReac[i]].name == "minecraft:air" then
-        return false
-      end
-    end
-    return true
-  end
+
   if reactor.getHeat() > offReac then
 	com.reactor_chamber.stopReactor()
     alert("     перегрев реактора !    ")
