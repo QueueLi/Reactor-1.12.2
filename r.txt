@@ -13,6 +13,34 @@ local sideReac,sideInv,sideRed,OutputEUt,StartEUt
 local slotReac,Reflector = {},{}
 local tr = com.transposer
 local reactor = com.reactor_chamber 
+local function gui() 
+  gpu.setResolution(28,15)
+  gpu.setBackground(0x000000)
+  gpu.fill(1,1,28,15," ")
+  gpu.setForeground(0x669999)
+  gpu.set(1,1,"┌──────────────────────────┐")
+  gpu.set(1,2,"│  │  │  │  │  │  │  │  │  │")
+  gpu.set(1,3,"│──────────────────────────│")
+  gpu.set(1,4,"│  │  │  │  │  │  │  │  │  │")
+  gpu.set(1,5,"│──────────────────────────│")
+  gpu.set(1,6,"│  │  │  │  │  │  │  │  │  │")
+  gpu.set(1,7,"│──────────────────────────│")
+  gpu.set(1,8,"│  │  │  │  │  │  │  │  │  │")
+  gpu.set(1,9,"│──────────────────────────│")
+ gpu.set(1,10,"│  │  │  │  │  │  │  │  │  │")
+ gpu.set(1,11,"│──────────────────────────│")
+ gpu.set(1,12,"│  │  │  │  │  │  │  │  │  │")
+ gpu.set(1,13,"└──────────────────────────┘")
+end
+ 
+local xy = {
+{"2","2"},{"5","2"},{"8","2"},{"11","2"},{"14","2"},{"17","2"},{"20","2"},{"23","2"},{"26","2"},
+{"2","4"},{"5","4"},{"8","4"},{"11","4"},{"14","4"},{"17","4"},{"20","4"},{"23","4"},{"26","4"},
+{"2","6"},{"5","6"},{"8","6"},{"11","6"},{"14","6"},{"17","6"},{"20","6"},{"23","6"},{"26","6"},
+{"2","8"},{"5","8"},{"8","8"},{"11","8"},{"14","8"},{"17","8"},{"20","8"},{"23","8"},{"26","8"},
+{"2","10"},{"5","10"},{"8","10"},{"11","10"},{"14","10"},{"17","10"},{"20","10"},{"23","10"},{"26","10"},
+{"2","12"},{"5","12"},{"8","12"},{"11","12"},{"14","12"},{"17","12"},{"20","12"},{"23","12"},{"26","12"},
+}
 
 local function ReactorControl()
   local data = tr.getAllStacks(sideReac).getAll()
@@ -53,7 +81,7 @@ local function ReactorControl()
         end
       end
     end
-	 
+
   end
   local function circuitCheck() 
     local data = tr.getAllStacks(sideReac).getAll()
@@ -63,175 +91,7 @@ local function ReactorControl()
       end
     end
     return true
-  end	  
-
-	  
-	  
-	if tonumber(string.format('%d%d%d',_OSVERSION:match("(%d).(%d).(%d)"))) < 172 then
-	  print("обнаружен ".._OSVERSION.."\n".."требуется версия 1.7 +")
-	  os.exit()
-	end
- 
-	if not com.isAvailable("transposer") then
-	  print("нет транспозера")
-	  os.exit()
-	end
-
-
-		if not com.isAvailable("reactor_chamber") then
-		  print("камера реактора не найдена")
-		  os.exit()
-		  end
-		  
-     print("\n".."Проверка реактора на производство Eu !")
-	 
-	 if reactor.producesEnergy() then
-	  print("\n".."Останавливаю реактор!")
-	  com.reactor_chamber.stopReactor()	
-	end
-  print("\n".."Все четко. Продолжаем !")
-if reactor.getHeat() > offReac then
-  print("\n".."перегрев реактора! Рисковать будем? Y/N") -- Надо нарисовать будет
-  os.exit()
-end
- 
-print("поиск реактора и сундука")
-for i = 0,5 do
-  local vr = tr.getInventoryName(i)
-  if vr then
-    if string.find(vr,"ic2:te") then
-      print("реактор в стороне: "..i)
-      sideReac = i
-    end
-    if string.find(vr,"hest") then
-      print("сундук в стороне:  "..i)
-      sideInv = i
-    end
   end
-end
-if not sideReac then
-  print("\n".."камера реактора не найдена")
-  os.exit()
-end
-if not sideInv then
-  print("\n".."сундук не найден")
-  os.exit()
-end
-local slotsReac = tr.getInventorySize(sideReac)
-local slotsInv = tr.getInventorySize(sideInv)
- 
-print("сохранение конденсаторов")
-local data = tr.getAllStacks(sideReac).getAll()
-for i = 0,slotsReac do
-  if data[i] and data[i].name then
-    if string.find(data[i].name,"ondensator") then
-      local per = math.ceil(100*data[i].damage/data[i].maxDamage)
-      print("слот: "..(i).."  износ: "..per.." %")
-      if per >= perDamage then
-        print("\n".."Обновляю конденсоторы: "..(i))
-		computer.beep(500, 1)
-		os.sleep(0.3)
-		computer.beep(500, 1)
-		os.sleep(0.3)
-		computer.beep(500, 1)
-		os.sleep(0.3)
-        ReactorControl()
-      end
-      table.insert(slotReac, i)
-    end
-  end
-end
-print("сохранение отражателей")
-for i = 0,slotsReac do
-  if data[i] and data[i].name then
-    if string.find(data[i].name,"eflector") then
-      print("слот: "..(i))
-      table.insert(Reflector, i)
-    end
-  end
-end
- 
-print("пробный запуск")
-for k,n in pairs({3,2,4,5,0,1}) do
-
-  com.reactor_chamber.startReactor()
-  os.sleep(1)
-  if reactor.producesEnergy() then
-    os.sleep(1)
-    StartEUt = math.ceil(reactor.getReactorEUOutput())
-    print("StartEUt = "..StartEUt)
-    sideRed = n
-	com.reactor_chamber.stopReactor()
-    break
-  else
-	com.reactor_chamber.stopReactor()
-  end
-  if k == 6 then
-    print("\n".."реактор не запускается")
-    os.exit()
-  end
-end
-os.sleep(1)
-print("настройка завершена".."\n".."старт...")
-os.sleep(1)
- 
-local function gui() 
-  gpu.setResolution(28,15)
-  gpu.setBackground(0x000000)
-  gpu.fill(1,1,28,15," ")
-  gpu.setForeground(0x669999)
-  gpu.set(1,1,"┌──────────────────────────┐")
-  gpu.set(1,2,"│  │  │  │  │  │  │  │  │  │")
-  gpu.set(1,3,"│──────────────────────────│")
-  gpu.set(1,4,"│  │  │  │  │  │  │  │  │  │")
-  gpu.set(1,5,"│──────────────────────────│")
-  gpu.set(1,6,"│  │  │  │  │  │  │  │  │  │")
-  gpu.set(1,7,"│──────────────────────────│")
-  gpu.set(1,8,"│  │  │  │  │  │  │  │  │  │")
-  gpu.set(1,9,"│──────────────────────────│")
- gpu.set(1,10,"│  │  │  │  │  │  │  │  │  │")
- gpu.set(1,11,"│──────────────────────────│")
- gpu.set(1,12,"│  │  │  │  │  │  │  │  │  │")
- gpu.set(1,13,"└──────────────────────────┘")
-end
- 
-local xy = {
-{"2","2"},{"5","2"},{"8","2"},{"11","2"},{"14","2"},{"17","2"},{"20","2"},{"23","2"},{"26","2"},
-{"2","4"},{"5","4"},{"8","4"},{"11","4"},{"14","4"},{"17","4"},{"20","4"},{"23","4"},{"26","4"},
-{"2","6"},{"5","6"},{"8","6"},{"11","6"},{"14","6"},{"17","6"},{"20","6"},{"23","6"},{"26","6"},
-{"2","8"},{"5","8"},{"8","8"},{"11","8"},{"14","8"},{"17","8"},{"20","8"},{"23","8"},{"26","8"},
-{"2","10"},{"5","10"},{"8","10"},{"11","10"},{"14","10"},{"17","10"},{"20","10"},{"23","10"},{"26","10"},
-{"2","12"},{"5","12"},{"8","12"},{"11","12"},{"14","12"},{"17","12"},{"20","12"},{"23","12"},{"26","12"},
-}
- 
-local function stop(wait) 
-  local e = ({event.pull(wait,"key_down")})[4]
-  if e == 18 or e == 20 then
-	com.reactor_chamber.stopReactor()
-    gpu.setResolution(w, h)
-    gpu.setBackground(0x000000)
-    gpu.setForeground(0xFFFFFF)
-    gpu.fill(1, 1, w, h, " ")
-    print("программа завершена")
-    os.sleep(1)
-    if reactor.producesEnergy() then
-      print("ВНИМАНИЕ реактор по прежнему активен !!!")
-    else
-      print("реактор остановлен")
-    end
-    run = false
-  end
-end
- 
-local function alert(message) 
-  gpu.setForeground(0xFF9900)
-  gpu.set(1,14,"  для завершения нажмите E  ")
-  gpu.setForeground(0xFF0000)
-  gpu.set(1,15,message)
-  computer.beep(500, 1)
-end
- 
-
   if reactor.getHeat() > offReac then
 	com.reactor_chamber.stopReactor()
     alert("     перегрев реактора !    ")
@@ -313,6 +173,142 @@ end
     StartEUt = math.ceil(reactor.getReactorEUOutput())
   end
 end
+	  
+
+	  
+	  
+	if tonumber(string.format('%d%d%d',_OSVERSION:match("(%d).(%d).(%d)"))) < 172 then
+	  print("обнаружен ".._OSVERSION.."\n".."требуется версия 1.7 +")
+	  os.exit()
+	end
+ 
+	if not com.isAvailable("transposer") then
+	  print("нет транспозера")
+	  os.exit()
+	end
+
+
+		if not com.isAvailable("reactor_chamber") then
+		  print("камера реактора не найдена")
+		  os.exit()
+		  end
+		  
+     print("\n".."Проверка реактора на производство Eu !")
+	 
+	 if reactor.producesEnergy() then
+	  print("\n".."Останавливаю реактор!")
+	  com.reactor_chamber.stopReactor()	
+	end
+  print("\n".."Все четко. Продолжаем !")
+if reactor.getHeat() > offReac then
+  print("\n".."перегрев реактора! Рисковать будем? Y/N") -- Надо нарисовать будет
+  os.exit()
+end
+ 
+print("поиск реактора и сундука")
+for i = 0,5 do
+  local vr = tr.getInventoryName(i)
+  if vr then
+    if string.find(vr,"ic2:te") then
+      print("реактор в стороне: "..i)
+      sideReac = i
+    end
+    if string.find(vr,"hest") then
+      print("сундук в стороне:  "..i)
+      sideInv = i
+    end
+  end
+end
+if not sideReac then
+  print("\n".."камера реактора не найдена")
+  os.exit()
+end
+if not sideInv then
+  print("\n".."сундук не найден")
+  os.exit()
+end
+local slotsReac = tr.getInventorySize(sideReac)
+local slotsInv = tr.getInventorySize(sideInv)
+ 
+print("сохранение конденсаторов")
+local data = tr.getAllStacks(sideReac).getAll()
+for i = 0,slotsReac do
+  if data[i] and data[i].name then
+    if string.find(data[i].name,"ondensator") then
+      local per = math.ceil(100*data[i].damage/data[i].maxDamage)
+      print("слот: "..(i).."  износ: "..per.." %")
+      if per >= perDamage then
+        print("\n".."замените конденсатор в слоте: "..(i))
+        os.exit()
+      end
+      table.insert(slotReac, i)
+    end
+  end
+end
+print("сохранение отражателей")
+for i = 0,slotsReac do
+  if data[i] and data[i].name then
+    if string.find(data[i].name,"eflector") then
+      print("слот: "..(i))
+      table.insert(Reflector, i)
+    end
+  end
+end
+ 
+print("пробный запуск")
+for k,n in pairs({3,2,4,5,0,1}) do
+
+  com.reactor_chamber.startReactor()
+  os.sleep(1)
+  if reactor.producesEnergy() then
+    os.sleep(1)
+    StartEUt = math.ceil(reactor.getReactorEUOutput())
+    print("StartEUt = "..StartEUt)
+    sideRed = n
+	com.reactor_chamber.stopReactor()
+    break
+  else
+	com.reactor_chamber.stopReactor()
+  end
+  if k == 6 then
+    print("\n".."реактор не запускается")
+    os.exit()
+  end
+end
+os.sleep(1)
+print("настройка завершена".."\n".."старт...")
+os.sleep(1)
+ 
+
+ 
+local function stop(wait) 
+  local e = ({event.pull(wait,"key_down")})[4]
+  if e == 18 or e == 20 then
+	com.reactor_chamber.stopReactor()
+    gpu.setResolution(w, h)
+    gpu.setBackground(0x000000)
+    gpu.setForeground(0xFFFFFF)
+    gpu.fill(1, 1, w, h, " ")
+    print("программа завершена")
+    os.sleep(1)
+    if reactor.producesEnergy() then
+      print("ВНИМАНИЕ реактор по прежнему активен !!!")
+    else
+      print("реактор остановлен")
+    end
+    run = false
+  end
+end
+ 
+local function alert(message) 
+  gpu.setForeground(0xFF9900)
+  gpu.set(1,14,"  для завершения нажмите E  ")
+  gpu.setForeground(0xFF0000)
+  gpu.set(1,15,message)
+  computer.beep(500, 1)
+end
+ 
+
  
 gui()
 gpu.setForeground(0xFF9900)
