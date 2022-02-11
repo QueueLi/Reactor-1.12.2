@@ -222,12 +222,7 @@ local function ReactorControl()
       end
     end
   end
-  
-  if reactor.getHeat() > offReac then
-	com.reactor_chamber.stopReactor()
-    alert("     перегрев реактора !    ")
-	stop(3)
-	 local function circuitCheck() 
+  local function circuitCheck() 
     local data = tr.getAllStacks(sideReac).getAll()
     for i = 1,#slotReac do
       if data[slotReac[i]].name == "minecraft:air" then
@@ -236,6 +231,11 @@ local function ReactorControl()
     end
     return true
   end
+  if reactor.getHeat() > offReac then
+	com.reactor_chamber.stopReactor()
+    alert("     перегрев реактора !    ")
+	stop(3)
+	 
   elseif not circuitCheck() then
     alert(" нет целых конденсаторов !  ")
 	com.reactor_chamber.stopReactor()
@@ -366,7 +366,7 @@ for i = 1,#slotReac do
     gpu.setForeground(0xFFFFFF)
     os.execute("cls")
     print("программа аварийно завершена")
-	print(" Обыч ошиб: " .. errsch.. "  Крит ошиб: " .. errK))
+	print(" Обыч ошиб: " .. errsch.. "  Крит ошиб: " .. errK)
     if type(err) == "table" then
       io.stderr:write(table.unpack(err))
     else
