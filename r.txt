@@ -13,15 +13,10 @@ local sideReac,sideInv,sideRed,OutputEUt,StartEUt
 local slotReac,Reflector = {},{}
 local tr = com.transposer
 local reactor = com.reactor_chamber 
-	local function circuitCheck() 
-		local data = tr.getAllStacks(sideReac).getAll()
-		for i = 1,#slotReac do
-		  if data[slotReac[i]].name == "minecraft:air" then
-			return false
-		  end
-		end
-		return true
-	  end
+	  
+
+	  
+	  
 	if tonumber(string.format('%d%d%d',_OSVERSION:match("(%d).(%d).(%d)"))) < 172 then
 	  print("обнаружен ".._OSVERSION.."\n".."требуется версия 1.7 +")
 	  os.exit()
@@ -32,9 +27,6 @@ local reactor = com.reactor_chamber
 	  os.exit()
 	end
 
-	if not com.isAvailable("redstone") then
-	  print("нет контроллера красного камня, а он и не нужен, Спасибо supernovus!")
-	end
 
 		if not com.isAvailable("reactor_chamber") then
 		  print("камера реактора не найдена")
@@ -181,7 +173,6 @@ local function alert(message)
   gpu.setForeground(0xFF0000)
   gpu.set(1,15,message)
   computer.beep(500, 1)
-  stop(3)
 end
  
 local function ReactorControl()
@@ -201,6 +192,7 @@ local function ReactorControl()
 
         computer.beep(500, 1)
       errK = errK + 1
+	  stop(3)
     end
     if not per or per >= perDamage then
       gpu.setForeground(0xFF9900)
@@ -234,8 +226,21 @@ local function ReactorControl()
   if reactor.getHeat() > offReac then
 	com.reactor_chamber.stopReactor()
     alert("     перегрев реактора !    ")
+	stop(3)
+	 local function circuitCheck() 
+    local data = tr.getAllStacks(sideReac).getAll()
+    for i = 1,#slotReac do
+      if data[slotReac[i]].name == "minecraft:air" then
+        return false
+      end
+    end
+    return true
+  end
   elseif not circuitCheck() then
     alert(" нет целых конденсаторов !  ")
+	com.reactor_chamber.stopReactor()
+	ReactorControl()
+	com.reactor_chamber.startReactor()
   elseif toReac == 0 then
     alert("    в сундуке нет места !   ")
   elseif noFuel >= 5 then
@@ -253,7 +258,7 @@ local function ReactorControl()
       gpu.set(1,15,"      реактор активен       ")
     end
   end
-  stop(0.7)
+  stop(0.1)
   if reactor.producesEnergy() and reactor.getReactorEUOutput() == 0 then
     noFuel = noFuel + 1
   else
@@ -361,7 +366,7 @@ for i = 1,#slotReac do
     gpu.setForeground(0xFFFFFF)
     os.execute("cls")
     print("программа аварийно завершена")
-	print(" Обыч ошиб: " .. errsch.. "  Крит ошиб: " .. errK)
+	print(" Обыч ошиб: " .. errsch.. "  Крит ошиб: " .. errK))
     if type(err) == "table" then
       io.stderr:write(table.unpack(err))
     else
