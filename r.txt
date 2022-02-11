@@ -245,8 +245,13 @@ for i = 0,slotsReac do
       local per = math.ceil(100*data[i].damage/data[i].maxDamage)
       print("слот: "..(i).."  износ: "..per.." %")
       if per >= perDamage then
-        print("\n".."замените конденсатор в слоте: "..(i))
-        os.exit()
+        print("\n".."Есть ошибки. Меняю конденсаторы: ")
+         os.sleep(0.1)
+		computer.beep(500, 1)
+		os.sleep(0.1)
+		computer.beep(500, 1)
+		os.sleep(0.1)
+  ReactorControl()
       end
       table.insert(slotReac, i)
     end
