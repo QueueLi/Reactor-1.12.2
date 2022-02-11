@@ -173,7 +173,10 @@ local function ReactorControl()
     StartEUt = math.ceil(reactor.getReactorEUOutput())
   end
 end
-	  
+
+gui()
+gpu.setForeground(0xFF9900)
+gpu.set(1,14,"  для завершения нажмите E  ")	  
 
 	  
 	  
