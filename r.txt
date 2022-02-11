@@ -1,6 +1,6 @@
 --Reactor
 local offReac = 8400 --температура перегрева реактора до отключения
-local perDamage = 61 --процент износа конденсатора при котором он меняется
+local perDamage = 100-19-19 --процент износа конденсатора при котором он меняется
  local errsch = 0
  local errK = 0
 local com = require("component")
@@ -130,7 +130,7 @@ os.sleep(1)
 local function gui() 
   gpu.setResolution(28,15)
   gpu.setBackground(0x000000)
-  gpu.fill(1,1,28,16," ")
+  gpu.fill(1,1,28,15," ")
   gpu.setForeground(0x669999)
   gpu.set(1,1,"┌──────────────────────────┐")
   gpu.set(1,2,"│  │  │  │  │  │  │  │  │  │")
@@ -194,13 +194,13 @@ local function ReactorControl()
       gpu.setForeground(0xFF9900)
       gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
     end
-    if per >= 76 then
+    if per >= 100-19 then
 	  com.reactor_chamber.stopReactor()
 	  os.sleep(0.5)
       alert(" снизте % замены конденсат. ")
 
         computer.beep(500, 1)
- errK = errK + 1
+      errK = errK + 1
     end
     if not per or per >= perDamage then
       gpu.setForeground(0xFF9900)
@@ -313,7 +313,6 @@ gpu.setForeground(0xFF9900)
 gpu.set(1,14,"  для завершения нажмите E  ")
 os.sleep(1)
 while run do
-gpu.set(1,16," Обыч ошиб: " .. errsch.. "Крит ошиб: " .. errK)
 for i = 1,#slotReac do
     if data[slotReac[i]].name == "minecraft:air" then
       per = nil
@@ -362,6 +361,7 @@ for i = 1,#slotReac do
     gpu.setForeground(0xFFFFFF)
     os.execute("cls")
     print("программа аварийно завершена")
+	print(" Обыч ошиб: " .. errsch.. "  Крит ошиб: " .. errK))
     if type(err) == "table" then
       io.stderr:write(table.unpack(err))
     else
