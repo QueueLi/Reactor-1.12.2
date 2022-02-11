@@ -361,7 +361,7 @@ for i = 1,#slotReac do
     gpu.setForeground(0xFFFFFF)
     os.execute("cls")
     print("программа аварийно завершена")
-	print(" Обыч ошиб: " .. errsch.. "  Крит ошиб: " .. errK))
+	print(" Обыч ошиб: " .. errsch.. "  Крит ошиб: " .. errK)
     if type(err) == "table" then
       io.stderr:write(table.unpack(err))
     else
