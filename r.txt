@@ -1,6 +1,6 @@
 --Reactor
-local offReac = 99999 --температура перегрева реактора до отключения
-local perDamage = 100-19-19 --процент износа конденсатора при котором он меняется
+local offReac = 9990 --температура перегрева реактора до отключения
+local perDamage = 100-19 --процент износа конденсатора при котором он меняется
  local errsch = 0
  local errK = 0
 local com = require("component")
@@ -161,25 +161,22 @@ local function ReactorControl()
       gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
     end
    
-    if not per or per >= perDamage then
+    if not per or per >= perDamage   then
       gpu.setForeground(0xFF9900)
       gpu.set(1,15,"    замена конденсаторов    ")
-	  
-      if reactor.producesEnergy() then
 		com.reactor_chamber.stopReactor()
-        os.sleep(0.1)
-      end
-	  
-      tr.transferItem(sideReac, sideInv, 1, slotReac[i], 26)
+        os.sleep(0.1)	  
+      tr.transferItem(sideReac, sideInv, 1, slotReac[i])  --Забрать из реактора в сундук 
 	  os.sleep(0.1)
+	  
       gpu.setForeground(0xFF0000)
       gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
       local data1 = tr.getAllStacks(sideInv).getAll()
       for i1 = 0,slotsInv do
         if data1[i1] and data1[i1].name then
           local per = math.ceil(100*data1[i1].damage/data1[i1].maxDamage)
-          if string.find(data1[i1].name,"ondensator") and per < 90 then
-            toReac = tr.transferItem(sideInv, sideReac, 1, i1, slotReac[i])
+          if string.find(data1[i1].name,"ondensator") and per < 1 then
+            toReac = tr.transferItem(sideInv, sideReac, 1, i1, slotReac[i]) --Из сундука в реактор
             gpu.setForeground(0x00FF00)
             gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
             break
@@ -188,6 +185,38 @@ local function ReactorControl()
           end
         end
       end
+	  
+								  for i = 1,#slotReac do
+								  if data[slotReac[i]].name == "minecraft:air" then
+						  per = nil
+						elseif data[slotReac[i]].damage then
+						  per = math.ceil(100*data[slotReac[i]].damage/data[slotReac[i]].maxDamage)
+						  gpu.setForeground(0xFF9900)
+						  gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),tostring(per))
+						end
+						gpu.setForeground(0xFF9900)
+						  gpu.set(1,15,"    замена конденсаторов    ")
+						  
+						  tr.transferItem(sideReac, sideInv, 1, slotReac[i])  --Забрать из реактора в сундук 
+						  
+						for i1 = 0,slotsInv do
+							if data1[i1] and data1[i1].name then
+							  local per = math.ceil(100*data1[i1].damage/data1[i1].maxDamage)
+							  if string.find(data1[i1].name,"ondensator") and per < 1 then
+								toReac = tr.transferItem(sideInv, sideReac, 1, i1, slotReac[i]) --Из сундука в реактор
+								gpu.setForeground(0x00FF00)
+								gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
+								break
+							  else
+								toReac = 0
+							  end
+							end
+						  end
+						  
+			  end
+			break  
+			  
+			  
     end
 
   end
@@ -210,8 +239,6 @@ local function ReactorControl()
 	com.reactor_chamber.stopReactor()
 	ReactorControl()
 	com.reactor_chamber.startReactor()
-  elseif toReac == 0 then
-    alert("    в сундуке нет места !   ")
 	
   elseif noFuel >= 3 or lowEu >= 3 then
     local data2 = tr.getAllStacks(sideReac).getAll()
