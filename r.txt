@@ -204,6 +204,7 @@ local function ReactorControl()
       end
 	  
       tr.transferItem(sideReac, sideInv, 1, slotReac[i])
+	  os.sleep(0.3)
       gpu.setForeground(0xFF0000)
       gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
       local data1 = tr.getAllStacks(sideInv).getAll()
@@ -339,6 +340,7 @@ for i = 1,#slotReac do
         os.sleep(0.1)
 	  
       tr.transferItem(sideReac, sideInv, 1, slotReac[i])
+	  os.sleep(0.3)
       gpu.setForeground(0xFF0000)
       gpu.set(tonumber(xy[slotReac[i]][1]),tonumber(xy[slotReac[i]][2]),"██")
       local data1 = tr.getAllStacks(sideInv).getAll()
