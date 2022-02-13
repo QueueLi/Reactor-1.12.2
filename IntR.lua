@@ -1,4 +1,4 @@
---Контроллер ядерного комплекса РГ  1 к 50 через впрыскиватель
+--Контроллер ядерного комплекса РГ  1 к 50 через впрыскиватель хладогента
 local com = require("component")
 local computer = require("computer")
 local image = require("image")
