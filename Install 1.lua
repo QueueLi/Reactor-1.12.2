@@ -29,6 +29,7 @@ local libs = {
 shell.execute("md /home/images/reactor/")
 shell.execute("md md /lib/FormatModules")
 shell.execute("wget -f https://raw.githubusercontent.com/QueueLi/Reactor-1.12.2/main/r.txt" .. " /home/Reactor.lua")
+shell.execute("wget -f https://raw.githubusercontent.com/QueueLi/Reactor-1.12.2/main/IntR.lua.txt" .. " /home/IntR.lua")
 
 
 for i = 1, #libs do
