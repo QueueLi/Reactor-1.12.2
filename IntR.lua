@@ -224,17 +224,13 @@ drawStatic()
 					eut = 0
 drawStatic()					
 					
-					for i=1, z do  
-					widgets[i][2] = 0
-					widgets[i][5] = nil
-					widgets[i][6] = false
-					end
+					
 					z = 0
 				for address, componentType in com.list("react")  do
 				z = z+1		
 				widgets[z][5] = address -- Запись адресса реактора в ячейку
 				widgets[z][6] = true
-				if  widgets[z][5] == nil then
+				if not widgets[z][5] == nil then
 							widgets[z][2] = com.invoke(widgets[z][5], "getReactorEUOutput")
 							eut = eut + widgets[z][2]
 				buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0x00FF00, 0, " ")
