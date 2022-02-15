@@ -1,0 +1,3 @@
+local shell = require("shell")
+shell.execute("wget -f https://raw.githubusercontent.com/QueueLi/Reactor-1.12.2/main/r.txt" .. " /home/Reactor.lua")
+shell.execute("wget -f https://raw.githubusercontent.com/QueueLi/Reactor-1.12.2/main/IntR.lua" .. " /home/IntR.lua")
