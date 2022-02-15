@@ -7,7 +7,9 @@ local shell = require("shell")
 local event = require("event")
 local consoleLines = {}
 local eut = 0
+local timer = 60
 local Plaz = 10000
+local sts = true
 local widgets = {
 { id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },
 { id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },
@@ -55,11 +57,23 @@ buffer.drawRectangle(6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайн�
 buffer.drawRectangle(12, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 46
 		
 		
-		buffer.drawRectangle(18, 24, 28, 3, 0xE06666, 0, " ") -- Аварийная кнопка завершения
-		buffer.drawText(20, 25, 0, 'Аварийное завершение!')
+		buffer.drawRectangle(6, 23, 25, 3, 0xE06666, 0, " ") -- Аварийная кнопка завершения
+		buffer.drawText(8, 24, 0, 'Аварийное завершение!')
+		buffer.drawRectangle(31, 23, 28, 3, 0x93C47D, 0, " ") -- Кнопка Старта
+		buffer.drawText(36, 24, 0, 'Старт') 
+		
+		buffer.drawRectangle(6, 26, 25, 3, 0xCCCCCC, 0, " ") -- Выход
+		buffer.drawText(14, 27, 0, 'Выход')
+		
+		buffer.drawText(34, 27, 0, 'Статус комлпекса: ') 
+		buffer.drawRectangle(53, 26, 6, 3, 0xFF0000, 0, " ") -- Статус
 		
 		
-		 buffer.drawRectangle(61, 16, 27, 6, 0xFFFFFF, 0, " ")
+		
+		
+		
+		
+	 buffer.drawRectangle(61, 16, 27, 6, 0xFFFFFF, 0, " ")
 
 		buffer.drawRectangle(60, 23, 29, 4, 0xCCCCCC, 0, " ") -- Порог лазурита
 
@@ -92,17 +106,21 @@ local function message(msg)
 	
 	---------
 local function Click()	
-
 local e, _, left, top, clickType, _ = event.pull(0.1, "touch")
 if left == nil then return nil end
-if left >= 18 and left <= 46 and top >= 24 and top <= 26 then 
+if left >= 6 and left <= 30 and top >= 23 and top <= 25 and sts then 
 		message("Off sistem!")
 		message("Останавливаю реакторы")
 		for address, componentType in com.list("react") do 
 	com.invoke(address, "stopReactor")
 		end
 		message("Успешно")
-		os.exit()
+		sts = false
+		
+	end
+	if left >= 31 and left <= 58 and top >= 23 and top <= 25 and not sts  then 
+		message("On sistem!")
+		sts = true
 	end
 if left >= 60 and left <= 64 and top >= 23 and top <= 24 then
 Plaz = Plaz + 1000
@@ -114,6 +132,18 @@ Plaz = Plaz - 1000
 message("Новый порог : ".. Plaz)
 end	
 
+if left >= 6 and left <= 30 and top >= 26 and top <= 28 then 
+		message("Off sistem!")
+		message("Останавливаю реакторы")
+		for address, componentType in com.list("react") do 
+		com.invoke(address, "stopReactor")
+		end
+		message("Успешно")
+		buffer.drawRectangle(53, 26, 6, 3, 0xFF0000, 0, " ") -- Статус OFF
+		buffer.drawChanges()
+		os.exit()
+		
+		end
 	
 end
 
@@ -124,18 +154,31 @@ local function wait(n)
 	while t < n  do
 	if  Click() == nil then
 		t = t + 0.1
+		timer = timer + 0.1
 		end
 	end
 end
+
+
 local function start()
 	for address, componentType in com.list("react") do 
 	com.invoke(address, "startReactor")
 	end
+					buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
+					buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
+					buffer.drawRectangle(53, 26, 6, 3, 0x00FF00, 0, " ") -- Статус ON
+					buffer.drawChanges()
+					
 	end
 local function stop()
 	for address, componentType in com.list("react") do 
 	com.invoke(address, "stopReactor")
 	end
+					buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
+					buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
+					buffer.drawRectangle(53, 26, 6, 3, 0xFF0000, 0, " ") -- Статус OFF
+					buffer.drawChanges()
+					
 	end
 	
 					local function checkRe()	
@@ -157,9 +200,7 @@ local function stop()
 						  wait(3)
 						  end		  
 					i=1
-					buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
-					buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
-					buffer.drawChanges()
+					
 					return 1
 					end
 	
@@ -175,32 +216,37 @@ local function stop()
 	end
 	
 	local function checkLaz()
-	sizes = com.me_interface.getItemsInNetwork()[1].size
+	local filter = {}
+	filter[1] = 'minecraft:lapis_block'
+	sizes = com.me_interface.getItemsInNetwork(filter)[1].size --me_interface.getItemsInNetwork('minecraft:lapis_block')[1].size
 	buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
 	while sizes < Plaz  do
 	stop()
 		  message("Ошбика! Лазурита!")
-		  message("Ожидание...")
+		  message("Ожидание... 60 сек")
 		  computer.beep(500, 1)
 		  buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
-		  wait(59)
+		  wait(60)
 		sizes = com.me_interface.getItemsInNetwork()[1].size  
     end
-		  message("Лазулита ОК ...")
+		  message("Лазурита ОК ...")
 			start()
 			buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
-		  wait(59)
-		buffer.drawChanges()		  
+		 -- wait(59)
+		buffer.drawChanges()
+	timer = 0		
 		  return 1
 	end
 	
 --------------	
 drawStatic()
 drawRightMenu()
-message("Настройка завершена")
+local function rabota()
+sts = true
+message("Настройка компонентов")
 wait(0.1)
 drawRightMenu()
 		
@@ -221,7 +267,6 @@ drawRightMenu()
 		widgets[51][4] = widgets[46][4]
 buffer.drawChanges()
 z = 0
-
 for address, componentType in com.list("react")  do
 z = z+1
 widgets[z][5] = address -- Запись адресса реактора в ячейку
@@ -231,10 +276,10 @@ wait(0.1)
 end
 message("Найдено реакторов: " .. z)
 
-
 i=1
 k = 2
-while k ~= 1 do
+while sts do
+
 message("Проверка всех компонетнов")
 wait(0.5)
 eut = 0
@@ -242,26 +287,52 @@ checkRe()
 wait(0.5)
 checkMe()
 wait(0.5)
---checkLaz()
---wait(0.5) 
+if timer >= 60 then 
+checkLaz()
+end
+
 message("Успешно, запускаю реакторы")
 start()
-	while checkRe() == 1 or  checkMe() == 1 or  checkLaz() == 1  do
-	message("Все хорошо ... ")
-	message(".. ")
+	while (checkRe() == 1 or  checkMe() == 1 or  checkLaz() == 1) and sts == true  do
+	--message("Все хорошо ... ")
+	buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
+	buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
+	buffer.drawChanges()
+	
+	if sts then
+	message("sts = " .. 1)
+	else message("sts = " .. 0)
+	end
+	
 	wait(0.5)
 eut = 0
 checkRe()
 wait(0.5)
 checkMe()
 wait(0.5)
+if timer >= 60 then 
 checkLaz()
-wait(0.5)
-	end
+end
+end
 computer.beep(500, 1)
-message("Ошибка! Лазурита! ")
+message("Остановка ")
 stop()
-message("Успешно остановил доступные реакторы") 
+
+eut = 0
+while not sts do 
+wait(0.1)
+if timer >= 60 then 
+checkLaz()
+end
+buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
+buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
+buffer.drawRectangle(53, 26, 6, 3, 0xFF0000, 0, " ") -- Статус OFF
+buffer.drawChanges()
+
+end
+
+end
 end
 
 
+if sts then  rabota() end
