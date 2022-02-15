@@ -234,7 +234,7 @@ knopoch()
 				z = z+1		
 				widgets[z][5] = address -- Запись адресса реактора в ячейку
 				widgets[z][6] = true
-				if  not widgets[z][5] == nil then
+				if  widgets[z][5] == nil then
 							widgets[z][2] = com.invoke(widgets[z][5], "getReactorEUOutput")
 							eut = eut + widgets[z][2]
 				buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0x00FF00, 0, " ")
