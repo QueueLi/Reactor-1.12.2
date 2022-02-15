@@ -8,7 +8,7 @@ local event = require("event")
 local consoleLines = {}
 local eut = 0
 local timer = 60
-local Plaz = 10000 -- Начальный порог лазурита
+local Plaz = 98000 -- Начальный порог лазурита
 local sts = true
 local f = true
 local widgets = {
@@ -320,7 +320,7 @@ end
 message("Успешно, запускаю реакторы")
 start()
 	while (checkRe() == 1 or  checkMe() == 1 or  checkLaz() == 1) and sts == true  do
-	message("Сек до чек " .. 60 - t)
+	message("Сек до чек " .. 60 - timer)
 	buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
 	buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. round(eut))
 	buffer.drawChanges()
