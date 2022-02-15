@@ -8,7 +8,7 @@ local event = require("event")
 local consoleLines = {}
 local eut = 0
 local timer = 60
-local Plaz = 10000
+local Plaz = 50000 -- Начальный порог лазурита
 local sts = true
 local widgets = {
 { id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },
