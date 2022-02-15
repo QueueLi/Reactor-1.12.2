@@ -208,7 +208,7 @@ local function start()
 					
 	end
 local function stop()
-knopoch()
+drawStatic()
 	for address, componentType in com.list("react") do 
 	com.invoke(address, "stopReactor")
 	end
@@ -222,7 +222,7 @@ knopoch()
 					local function checkRe()
 					wait(0.1)
 					eut = 0
-knopoch()					
+drawStatic()					
 					
 					for i=1, z do  
 					widgets[i][2] = 0
