@@ -8,7 +8,7 @@ local event = require("event")
 local consoleLines = {}
 local eut = 0
 local timer = 60
-local Plaz = 50000 -- Начальный порог лазурита
+local Plaz = 10000 -- Начальный порог лазурита
 local sts = true
 local widgets = {
 { id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },
@@ -225,10 +225,10 @@ knopoch()
 knopoch()					
 					z = 0
 					for i=1, z do  
-					widgets[z][1] = i
-					widgets[z][2] = 0
-					widgets[z][5] = nil
-					widgets[z][6] = false
+					widgets[i][1] = i
+					widgets[i][2] = 0
+					widgets[i][5] = nil
+					widgets[i][6] = false
 					end
 				for address, componentType in com.list("react")  do
 				z = z+1				
