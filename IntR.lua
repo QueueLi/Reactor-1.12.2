@@ -41,39 +41,6 @@ x = 6
 		 
 		buffer.drawRectangle(x, y, 4, 2, 0xffc6c6, 0, " ") -- вывести	кнопочки
 			for j = 1, 9 do			
-			n = n+1
-			buffer.drawRectangle(x, y, 4, 2, 0xffc6c6, 0, " ") -- вывести кнопочки
-			x = x + 6
-			end
-		x = 6
-		
-		y = y + 3
-		end
-		
-		x=54
-		
-buffer.drawRectangle(x-6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 53 
-buffer.drawRectangle(x, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 54	
-buffer.drawRectangle(6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 47
-buffer.drawRectangle(12, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 46
-end
-
-local function drawStatic()
-		buffer.setResolution(90, 30)
-		buffer.clear(0xdcdcdc)
-buffer.drawRectangle(3, 2, 86, 28, 0xFFFFFF, 0, " ")
-buffer.drawText(16, 1, 0, "Контроль ядерного комплекса РГ")
-		buffer.drawRectangle(4, 3, 56, 19, 0xBFBFBF, 0, " ") -- Фон реактора
-		
-		x = 6 
-		y = 4
-		local i = 1
-		local j = 1
-		local n = 1
-		for i = 1, 6 do
-		 
-		buffer.drawRectangle(x, y, 4, 2, 0xffc6c6, 0, " ") -- вывести	кнопочки
-			for j = 1, 9 do			
 			widgets[n][1] = n			
 			widgets[n][3] = x
 			widgets[n][4] = y
@@ -87,6 +54,16 @@ buffer.drawText(16, 1, 0, "Контроль ядерного комплекса 
 		end
 		
 		x=54
+end
+
+local function drawStatic()
+		buffer.setResolution(90, 30)
+		buffer.clear(0xdcdcdc)
+buffer.drawRectangle(3, 2, 86, 28, 0xFFFFFF, 0, " ")
+buffer.drawText(16, 1, 0, "Контроль ядерного комплекса РГ")
+		buffer.drawRectangle(4, 3, 56, 19, 0xBFBFBF, 0, " ") -- Фон реактора
+		
+		
 		
 buffer.drawRectangle(x-6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 53 
 buffer.drawRectangle(x, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 54	
@@ -208,7 +185,7 @@ local function start()
 					
 	end
 local function stop()
-drawStatic()
+
 	for address, componentType in com.list("react") do 
 	com.invoke(address, "stopReactor")
 	end
@@ -222,7 +199,7 @@ drawStatic()
 					local function checkRe()
 					wait(0.1)
 					eut = 0
-drawStatic()					
+					
 					
 					
 					z = 0
@@ -293,6 +270,7 @@ drawStatic()
 --------------	
 drawStatic()
 drawRightMenu()
+knopoch()
 local function rabota()
 sts = true
 message("Настройка компонентов")
@@ -316,13 +294,6 @@ drawRightMenu()
 		widgets[51][4] = widgets[46][4]
 buffer.drawChanges()
 z = 0
-for address, componentType in com.list("react")  do
-z = z+1
-widgets[z][5] = address -- Запись адресса реактора в ячейку
-widgets[z][6] = true
-buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0x00FF00, 0, " ")
-wait(0.1)
-end
 message("Найдено реакторов: " .. z)
 
 i=1
@@ -377,5 +348,11 @@ end
 end
 end
 
-
+for address, componentType in com.list("react")  do
+z = z+1
+widgets[z][5] = address -- Запись адресса реактора в ячейку
+widgets[z][6] = true
+buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0x00FF00, 0, " ")
+wait(0.1)
+end
 if sts then  rabota() end
