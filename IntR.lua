@@ -297,11 +297,7 @@ start()
 	buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
 	buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
 	buffer.drawChanges()
-	
-	if sts then
-	message("sts = " .. 1)
-	else message("sts = " .. 0)
-	end
+
 	
 	wait(0.5)
 eut = 0
