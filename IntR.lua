@@ -216,9 +216,8 @@ local function stop()
 	end
 	
 	local function checkLaz()
-	local filter = {}
-	filter[1] = 'minecraft:lapis_block'
-	sizes = com.me_interface.getItemsInNetwork(filter)[1].size --me_interface.getItemsInNetwork('minecraft:lapis_block')[1].size
+	
+	sizes = com.me_interface.getItemsInNetwork()[1].size --me_interface.getItemsInNetwork('minecraft:lapis_block')[1].size
 	buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
 	while sizes < Plaz  do
