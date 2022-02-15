@@ -223,15 +223,15 @@ knopoch()
 					wait(0.1)
 					eut = 0
 knopoch()					
-					z = 0
+					
 					for i=1, z do  
-					widgets[i][1] = i
 					widgets[i][2] = 0
 					widgets[i][5] = nil
 					widgets[i][6] = false
 					end
+					z = 0
 				for address, componentType in com.list("react")  do
-				z = z+1				
+				z = z+1		
 				widgets[z][5] = address -- Запись адресса реактора в ячейку
 				widgets[z][6] = true
 				if not widgets[z][5] == nil then
