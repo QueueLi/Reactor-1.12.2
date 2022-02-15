@@ -21,6 +21,43 @@ local widgets = {
 for i = 1, 11 do
     consoleLines[i] = ""
 end
+
+function round(number) --Функция чтобы вывести число после запятой
+  if (number - (number % 0.1)) - (number - (number % 1)) < 0.5 then
+    number = number - (number % 1)
+  else
+    number = (number - (number % 1)) + 1
+  end
+ return number
+end
+
+local function knopoch()
+x = 6 
+		y = 4
+		local i = 1
+		local j = 1
+		local n = 1
+		for i = 1, 6 do
+		 
+		buffer.drawRectangle(x, y, 4, 2, 0xffc6c6, 0, " ") -- вывести	кнопочки
+			for j = 1, 9 do			
+			n = n+1
+			buffer.drawRectangle(x, y, 4, 2, 0xffc6c6, 0, " ") -- вывести кнопочки
+			x = x + 6
+			end
+		x = 6
+		
+		y = y + 3
+		end
+		
+		x=54
+		
+buffer.drawRectangle(x-6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 53 
+buffer.drawRectangle(x, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 54	
+buffer.drawRectangle(6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 47
+buffer.drawRectangle(12, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 46
+end
+
 local function drawStatic()
 		buffer.setResolution(90, 30)
 		buffer.clear(0xdcdcdc)
@@ -165,23 +202,26 @@ local function start()
 	com.invoke(address, "startReactor")
 	end
 					buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
-					buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
+					buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. round(eut))
 					buffer.drawRectangle(53, 26, 6, 3, 0x00FF00, 0, " ") -- Статус ON
 					buffer.drawChanges()
 					
 	end
 local function stop()
+knopoch()
 	for address, componentType in com.list("react") do 
 	com.invoke(address, "stopReactor")
 	end
 					buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
-					buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
+					buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. round(eut))
 					buffer.drawRectangle(53, 26, 6, 3, 0xFF0000, 0, " ") -- Статус OFF
 					buffer.drawChanges()
 					
 	end
 	
-					local function checkRe()	
+					local function checkRe()
+					eut = 0
+knopoch()					
 					z = 0
 				for address, componentType in com.list("react")  do
 				z = z+1
@@ -189,7 +229,7 @@ local function stop()
 				widgets[z][6] = true
 
 							widgets[z][2] = com.invoke(widgets[z][5], "getReactorEUOutput")
-							eut = eut + widgets[i][2]
+							eut = eut + widgets[z][2]
 				buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0x00FF00, 0, " ")
 				wait(0.1)
 
@@ -200,7 +240,9 @@ local function stop()
 						  wait(3)
 						  end		  
 					i=1
-					
+					buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
+					buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. round(eut))
+					buffer.drawChanges()
 					return 1
 					end
 	
@@ -211,7 +253,7 @@ local function stop()
 		  stop()
 		  wait(3)
 		  end
-  		start()
+  		
 		  return 1
 	end
 	
@@ -227,7 +269,7 @@ local function stop()
 		  computer.beep(500, 1)
 		  buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
-		  wait(60)
+		  --wait(60)
 		sizes = com.me_interface.getItemsInNetwork()[1].size  
     end
 		  message("Лазурита ОК ...")
@@ -280,12 +322,12 @@ k = 2
 while sts do
 
 message("Проверка всех компонетнов")
-wait(0.5)
+wait(0.1)
 eut = 0
 checkRe()
-wait(0.5)
+wait(0.1)
 checkMe()
-wait(0.5)
+wait(0.1)
 if timer >= 60 then 
 checkLaz()
 end
@@ -295,16 +337,16 @@ start()
 	while (checkRe() == 1 or  checkMe() == 1 or  checkLaz() == 1) and sts == true  do
 	--message("Все хорошо ... ")
 	buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
-	buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
+	buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. round(eut))
 	buffer.drawChanges()
 
 	
-	wait(0.5)
+	wait(0.1)
 eut = 0
 checkRe()
-wait(0.5)
+wait(0.1)
 checkMe()
-wait(0.5)
+wait(0.1)
 if timer >= 60 then 
 checkLaz()
 end
@@ -320,7 +362,7 @@ if timer >= 60 then
 checkLaz()
 end
 buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
-buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. eut)
+buffer.drawText(66, 20, 0x00FF00, 'EU/t : '.. round(eut))
 buffer.drawRectangle(53, 26, 6, 3, 0xFF0000, 0, " ") -- Статус OFF
 buffer.drawChanges()
 
