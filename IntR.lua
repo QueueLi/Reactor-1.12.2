@@ -224,13 +224,21 @@ knopoch()
 					eut = 0
 knopoch()					
 					z = 0
+					for i=1, z do  
+					widgets[z][1] = i
+					widgets[z][2] = 0
+					widgets[z][5] = nil
+					widgets[z][6] = false
+					end
 				for address, componentType in com.list("react")  do
 				z = z+1				
 				widgets[z][5] = address -- Запись адресса реактора в ячейку
 				widgets[z][6] = true
+				if not widgets[z][5] == nil then
 							widgets[z][2] = com.invoke(widgets[z][5], "getReactorEUOutput")
 							eut = eut + widgets[z][2]
 				buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0x00FF00, 0, " ")
+				end
 				if widgets[z][2] == 0 and widgets[z][6]
 				then  buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0xFFFF00, 0, " ")
 				end
