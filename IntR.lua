@@ -10,6 +10,7 @@ local eut = 0
 local timer = 60
 local Plaz = 10000 -- Начальный порог лазурита
 local sts = true
+local f = true
 local widgets = {
 { id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },
 { id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },
@@ -191,6 +192,7 @@ local function start()
 local function stop()
 
 	for address, componentType in com.list("react") do 
+	wait(0.1)
 	com.invoke(address, "stopReactor")
 	end
 					buffer.drawRectangle(61, 19, 27, 3, 0x111111, 0, " ") --Колличество еу в тик
@@ -218,9 +220,7 @@ local function stop()
 			
 				
 				
-				if widgets[z][2] == 0 and widgets[z][6]
-				then  buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0xFFFF00, 0, " ")
-				end
+				
 				
 				end
 					while not com.isAvailable("reactor_chamber")  do
@@ -252,6 +252,7 @@ local function stop()
 	buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
 	while sizes < Plaz  do
+	f = false
 	stop()
 		  message("Ошбика! Лазурита!")
 		  message("Ожидание... 60 сек")
@@ -259,10 +260,13 @@ local function stop()
 		  buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
 		  --wait(60)
-		sizes = com.me_interface.getItemsInNetwork()[1].size  
+		sizes = com.me_interface.getItemsInNetwork()[1].size 
+f = true		
     end
 		  message("Лазурита ОК ...")
+		  if f then 
 			start()
+			end
 			buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
 		 -- wait(59)
@@ -297,8 +301,6 @@ wait(0.1)
 		widgets[51][3] = widgets[46][3]
 		widgets[51][4] = widgets[46][4]
 buffer.drawChanges()
-z = 0
-message("Найдено реакторов: " .. z)
 
 i=1
 k = 2
@@ -351,7 +353,7 @@ end
 
 end
 end
-
+z = 0
 for address, componentType in com.list("react")  do
 z = z+1
 widgets[z][5] = address -- Запись адресса реактора в ячейку
