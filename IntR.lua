@@ -54,6 +54,13 @@ x = 6
 		end
 		
 		x=54
+		
+		buffer.drawRectangle(x-6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 53 
+buffer.drawRectangle(x, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 54	
+buffer.drawRectangle(6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 47
+buffer.drawRectangle(12, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 46
+
+buffer.drawChanges()
 end
 
 local function drawStatic()
@@ -65,10 +72,7 @@ buffer.drawText(16, 1, 0, "Контроль ядерного комплекса 
 		
 		
 		
-buffer.drawRectangle(x-6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 53 
-buffer.drawRectangle(x, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 54	
-buffer.drawRectangle(6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 47
-buffer.drawRectangle(12, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 46
+
 		
 		
 		buffer.drawRectangle(6, 23, 25, 3, 0xE06666, 0, " ") -- Аварийная кнопка завершения
@@ -272,10 +276,10 @@ drawStatic()
 drawRightMenu()
 knopoch()
 local function rabota()
+knopoch()
 sts = true
 message("Настройка компонентов")
 wait(0.1)
-drawRightMenu()
 		
 		
 		widgets[47][1] = widgets[52][1] -- поменять местами 48 с 52
