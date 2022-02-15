@@ -225,6 +225,7 @@ knopoch()
 					z = 0
 				for address, componentType in com.list("react")  do
 				z = z+1
+				
 				widgets[z][5] = address -- Запись адресса реактора в ячейку
 				widgets[z][6] = true
 
@@ -232,7 +233,10 @@ knopoch()
 							eut = eut + widgets[z][2]
 				buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0x00FF00, 0, " ")
 				wait(0.1)
-
+				if widgets[z][2] == 0 and widgets[z][6]
+				then  buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0xFFFF00, 0, " ")
+				end
+				
 				end
 					while not com.isAvailable("reactor_chamber")  do
 						  message("Ошибика! Нет реакторов!")
