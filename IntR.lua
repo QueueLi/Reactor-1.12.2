@@ -11,12 +11,12 @@ local timer = 60
 local Plaz = 50000 -- Начальный порог лазурита
 local sts = true
 local widgets = {
-{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },
-{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },
-{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },
-{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },
-{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },
-{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check },{ id,  eu = 0, xt, yt, add, check }
+{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },
+{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },
+{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },
+{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },
+{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },
+{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false },{ id,  eu = 0, xt, yt, add, check = false }
 }
 for i = 1, 11 do
     consoleLines[i] = ""
@@ -220,19 +220,17 @@ knopoch()
 	end
 	
 					local function checkRe()
+					wait(0.1)
 					eut = 0
 knopoch()					
 					z = 0
 				for address, componentType in com.list("react")  do
-				z = z+1
-				
+				z = z+1				
 				widgets[z][5] = address -- Запись адресса реактора в ячейку
 				widgets[z][6] = true
-
 							widgets[z][2] = com.invoke(widgets[z][5], "getReactorEUOutput")
 							eut = eut + widgets[z][2]
 				buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0x00FF00, 0, " ")
-				wait(0.1)
 				if widgets[z][2] == 0 and widgets[z][6]
 				then  buffer.drawRectangle(widgets[z][3], widgets[z][4], 4, 2, 0xFFFF00, 0, " ")
 				end
@@ -327,7 +325,6 @@ while sts do
 
 message("Проверка всех компонетнов")
 wait(0.1)
-eut = 0
 checkRe()
 wait(0.1)
 checkMe()
@@ -346,7 +343,6 @@ start()
 
 	
 	wait(0.1)
-eut = 0
 checkRe()
 wait(0.1)
 checkMe()
