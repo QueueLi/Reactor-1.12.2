@@ -1,0 +1,10 @@
+local computer = require("computer")
+local event = require("event")
+
+function onTimer()
+    computer.shutdown(true)
+end
+
+-- Выполнить 50 раз, затем остановится. Если вы не успели что-то
+-- доделать за эти 300 секунд - то рестарт
+event.timer(30, onTimer, 50)
