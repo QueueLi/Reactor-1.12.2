@@ -8,7 +8,7 @@ local event = require("event")
 local consoleLines = {}
 local eut = 0
 local timer = 60
-local Plaz = 10000 -- Начальный порог лазурита
+local Plaz = 20000 -- Начальный порог лазурита
 local sts = true
 local f = true
 local widgets = {
@@ -135,7 +135,7 @@ widgets[47][1] = widgets[52][1] -- поменять местами 48 с 52
 		buffer.drawText(36, 24, 0, 'Старт') 
 		
 		buffer.drawRectangle(6, 26, 25, 3, 0xCCCCCC, 0, " ") -- Выход
-		buffer.drawText(14, 27, 0, 'Выход')
+		buffer.drawText(14, 27, 0, 'Рестарт')
 		
 		buffer.drawText(34, 27, 0, 'Статус комлпекса: ') 
 		buffer.drawRectangle(53, 26, 6, 3, 0xFF0000, 0, " ") -- Статус
@@ -326,7 +326,7 @@ local function stop()
 		  computer.beep(500, 1)
 		  buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
-		  --wait(60)
+		  wait(60)
 		sizes = com.me_interface.getItemsInNetwork()[1].size 
 				
     end
