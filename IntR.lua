@@ -60,7 +60,20 @@ x = 6
 buffer.drawRectangle(x, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 54	
 buffer.drawRectangle(6, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 47
 buffer.drawRectangle(12, y-3, 4, 2, 0xBFBFBF, 0, " ") -- Убрать крайние с крайние 46
-
+widgets[47][1] = widgets[52][1] -- поменять местами 48 с 52
+		widgets[47][3] = widgets[52][3]
+		widgets[47][4] = widgets[52][4]
+		
+		widgets[46][1] = widgets[51][1] -- поменять местами 47 с 51	
+		widgets[46][3] = widgets[51][3]
+		widgets[46][4] = widgets[51][4]
+		widgets[52][1] = widgets[47][1] -- поменять местами 48 с 52
+		widgets[52][3] = widgets[47][3]
+		widgets[52][4] = widgets[47][4]
+		
+		widgets[51][1] = widgets[46][1] -- поменять местами 47 с 51	
+		widgets[51][3] = widgets[46][3]
+		widgets[51][4] = widgets[46][4]
 buffer.drawChanges()
 end
 
