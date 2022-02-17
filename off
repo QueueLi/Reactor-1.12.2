@@ -1,0 +1,15 @@
+local com = require("component")
+local computer = require("computer")
+local image = require("image")
+local buffer = require("doubleBuffering")
+local shell = require("shell")
+local event = require("event")
+local consoleLines = {}
+
+
+
+	for address, componentType in com.list("react") do 
+	os.sleep(0.1)
+	com.invoke(address, "stopReactor")
+	end				
+
