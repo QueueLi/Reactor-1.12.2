@@ -324,7 +324,7 @@ local function stop()
 		  computer.beep(500, 1)
 		  buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
-		  --wait(60)
+		  wait(60)
 		sizes = com.me_interface.getItemsInNetwork()[1].size 
 				
     end
