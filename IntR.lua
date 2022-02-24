@@ -8,7 +8,7 @@ local event = require("event")
 local consoleLines = {}
 local eut = 0
 local timer = 60
-local Plaz = 10000 -- Начальный порог лазурита
+local Plaz = 20000 -- Начальный порог лазурита
 local sts = true
 local f = true
 local widgets = {
@@ -78,7 +78,7 @@ buffer.drawChanges()
 end
 
 local function drawStatic()
-		buffer.setResolution(90, 40)
+		buffer.setResolution(90, 30)
 		buffer.clear(0xdcdcdc)
 buffer.drawRectangle(3, 2, 86, 28, 0xFFFFFF, 0, " ")
 buffer.drawText(16, 1, 0, "Контроль реакторного комплекса РГ")
