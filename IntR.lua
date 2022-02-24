@@ -8,7 +8,7 @@ local event = require("event")
 local consoleLines = {}
 local eut = 0
 local timer = 60
-local Plaz = 20000 -- Начальный порог лазурита
+local Plaz = 10000 -- Начальный порог лазурита
 local sts = true
 local f = true
 local widgets = {
@@ -78,10 +78,10 @@ buffer.drawChanges()
 end
 
 local function drawStatic()
-		buffer.setResolution(90, 30)
+		buffer.setResolution(90, 40)
 		buffer.clear(0xdcdcdc)
 buffer.drawRectangle(3, 2, 86, 28, 0xFFFFFF, 0, " ")
-buffer.drawText(16, 1, 0, "Контроль ядерного комплекса РГ")
+buffer.drawText(16, 1, 0, "Контроль реакторного комплекса РГ")
 		buffer.drawRectangle(4, 3, 56, 19, 0xBFBFBF, 0, " ") -- Фон реактора
 		
 		
@@ -135,7 +135,7 @@ widgets[47][1] = widgets[52][1] -- поменять местами 48 с 52
 		buffer.drawText(36, 24, 0, 'Старт') 
 		
 		buffer.drawRectangle(6, 26, 25, 3, 0xCCCCCC, 0, " ") -- Выход
-		buffer.drawText(14, 27, 0, 'Рестарт')
+		buffer.drawText(14, 27, 0, 'Выход')
 		
 		buffer.drawText(34, 27, 0, 'Статус комлпекса: ') 
 		buffer.drawRectangle(53, 26, 6, 3, 0xFF0000, 0, " ") -- Статус
@@ -186,8 +186,7 @@ local function Click()
 local e, _, left, top, clickType, _ = event.pull(0.1, "touch")
 if left == nil then return nil end
 if left >= 6 and left <= 30 and top >= 23 and top <= 25 and sts then 
-		message("Off sistem!")
-		message("Останавливаю реакторы")
+		message("Sistem off!")
 		for address, componentType in com.list("react") do 
 	com.invoke(address, "stopReactor")
 		end
@@ -196,7 +195,7 @@ if left >= 6 and left <= 30 and top >= 23 and top <= 25 and sts then
 		
 	end
 	if left >= 31 and left <= 58 and top >= 23 and top <= 25 and not sts  then 
-		message("On sistem!")
+		message("Sistem On!")
 		sts = true
 	end
 if left >= 60 and left <= 64 and top >= 23 and top <= 24 then
@@ -210,8 +209,7 @@ message("Новый порог : ".. Plaz)
 end	
 
 if left >= 6 and left <= 30 and top >= 26 and top <= 28 then 
-		message("Off sistem!")
-		message("Останавливаю реакторы")
+		message("sistem off")
 		for address, componentType in com.list("react") do 
 		com.invoke(address, "stopReactor")
 		end
@@ -326,7 +324,7 @@ local function stop()
 		  computer.beep(500, 1)
 		  buffer.drawRectangle(61, 15, 27, 3, 0x111111, 0, " ") --Колличество Лазурита
 			buffer.drawText(66, 16, 0x00FF00, 'Лазурит: ' .. sizes)
-		  wait(60)
+		  --wait(60)
 		sizes = com.me_interface.getItemsInNetwork()[1].size 
 				
     end
