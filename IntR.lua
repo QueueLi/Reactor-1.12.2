@@ -134,8 +134,8 @@ widgets[47][1] = widgets[52][1] -- поменять местами 48 с 52
 		buffer.drawRectangle(31, 23, 28, 3, 0x93C47D, 0, " ") -- Кнопка Старта
 		buffer.drawText(36, 24, 0, 'Старт') 
 		
-		buffer.drawRectangle(6, 26, 25, 3, 0xCCCCCC, 0, " ") -- Выход
-		buffer.drawText(14, 27, 0, 'Выход')
+		buffer.drawRectangle(6, 26, 25, 3, 0xCCCCCC, 0, " ") -- Рестарт
+		buffer.drawText(14, 27, 0, 'Рестарт программы')
 		
 		buffer.drawText(34, 27, 0, 'Статус комлпекса: ') 
 		buffer.drawRectangle(53, 26, 6, 3, 0xFF0000, 0, " ") -- Статус
