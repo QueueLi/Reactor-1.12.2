@@ -37,7 +37,8 @@
 ![image](https://user-images.githubusercontent.com/62590518/155903597-422f58ee-3037-4470-a76e-77d70c87622c.png) 
 ![image](https://user-images.githubusercontent.com/62590518/155903615-12ca2cef-7ad9-4425-a25b-d5b0cf933304.png)  
   
-  
+ ![image](https://user-images.githubusercontent.com/62590518/158880725-55229562-ad05-4a27-9cc5-4173ec885f3c.png)
+ 
 PS. Настоятельно не советую устанавливать какой-нибудь из компонентов на границе любого из чанков! Иначе произойдет неконтролируемый взрыв всей системы при рестарте!  
 
 
